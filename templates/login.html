@@ -1,0 +1,36 @@
+{% extends "main.html" %}
+{% block content %}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<meta name="google-signin-client_id" content="255711990780-e83nlafodj4j1bhf9bm2785akgekct7m.apps.googleusercontent.com">
+
+<script>
+    onError = function() {
+        $('#error-message').html('Login failed. Please try again later.');
+    }
+
+    function onSignIn(googleUser) {
+        var authResponse = googleUser.getAuthResponse(true);
+        $.ajax({
+            type: "POST",
+            url: "/login/?state={{state}}",
+            processData: false,
+            data: authResponse.access_token,
+            contentType: "application/octet-stream; charset=utf-8",
+            success: function(data, textStatus, xhr) {
+                if (xhr.status === 200) {
+                    window.location.href = '/';
+                } else {
+                    onError();
+                }
+            },
+            error: onError
+        });
+    }
+</script>
+
+<section class="login">
+    <h2>Welcome!</h2>
+    <div class="g-signin2 google-button" data-width="250" data-longtitle="true" data-theme="dark" data-onsuccess="onSignIn"></div>
+    <div id="error-message"></div>
+</section>
+{% endblock %}

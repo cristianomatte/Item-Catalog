@@ -1,0 +1,30 @@
+{% extends "main.html" %}
+{% block content %}
+<div class="list">
+    <h2>Categories</h2>
+    {% for category in categories %}
+        <p><a href="{{url_for('web.show_category_items', category_id=category.id)}}">{{ category.name }}</a></p>
+    {% endfor %}
+</div>
+
+<div class="separator"></div>
+
+<div class="list">
+    {% if 'user_id' in session %}
+        {% if category %}
+            <a href="{{url_for('web.create_item_for_category', category_id=category.id)}}" class="add-item">Add Item</a>
+        {% else %}
+            <a href="{{url_for('web.create_item')}}" class="add-item">Add Item</a>
+        {% endif %}
+    {% endif %}
+    <h2>{{ title }}</h2>
+    {% for item in items %}
+        <p>
+            <a href="{{url_for('web.show_item', category_id=item.category.id, item_id=item.id)}}">{{ item.name }}</a>
+            {% if not category %}
+                <span class="category-name">({{ item.category.name }})</span>
+            {% endif %}
+        </p>
+    {% endfor %}
+</div>
+{% endblock %}

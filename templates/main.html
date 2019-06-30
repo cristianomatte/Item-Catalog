@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Catalog App</title>
+        <link rel="stylesheet" href="https://necolas.github.io/normalize.css/latest/normalize.css">
+        <link rel=stylesheet type=text/css href="{{url_for('static', filename='styles.css')}}">
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <script>
+            function logout() {
+                gapi.load('auth2', function() {
+                    gapi.auth2.init({
+                        client_id: '255711990780-e83nlafodj4j1bhf9bm2785akgekct7m.apps.googleusercontent.com'
+                    }).then(function (auth2) {
+                        auth2.signOut().then(function () {
+                            location.href = {{url_for('auth.logout')}};
+                        });
+                    });
+                });
+            }
+        </script>
+    </head>
+    <body>
+        <header>
+            <div class="header-container">
+                <h1 class="header-text">Catalog App</h1>
+                {% if not '/login' in request.path %}
+                    {% if 'user_id' in session %}
+                        <button class="login-button" onclick="logout()">Logout</button>
+                    {% else %}
+                        <button class="login-button" onclick="location.href={{url_for('auth.login')}}">Login</button>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </header>
+
+        <section class="flash">
+            {% with messages = get_flashed_messages() %}
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            {% endwith %}
+        </section>
+
+        <main class="main-container">
+            {% block content %}
+            {% endblock %}
+        </main>
+    </body>
+</html>
