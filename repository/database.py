@@ -8,7 +8,7 @@ class Database:
     """Database performs commands and queries on a SQL database"""
 
     def __init__(self, db_session):
-        self.db_session = db_session
+        self.db_session = db_session()
 
     def get_user_with_email(self, email):
         try:
